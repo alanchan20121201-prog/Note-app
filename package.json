@@ -5,7 +5,8 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "build": "electron-builder --win portable"
+    "build": "electron-builder --win portable",
+    "build:4lang": "node build-4lang.js"
   },
   "devDependencies": {
     "electron": "^28.0.0",
@@ -14,6 +15,14 @@
   "build": {
     "appId": "com.notes.app",
     "productName": "NoteApp",
+    "files": [
+      "main.js",
+      "index.html",
+      "renderer.js",
+      "i18n.js",
+      "lang.txt",
+      "icon.ico"
+    ],
     "win": {
       "target": "portable",
       "icon": "icon.ico"

@@ -4,6 +4,8 @@ let currentNoteId = null;
 let currentView = 'notes';
 
 window.onload = function() {
+    applyI18n();
+    document.getElementById('sidebarTitle').textContent = t('sidebar.notes');
     renderNoteList();
     if (notes.length > 0) {
         loadNote(notes[0].id);
@@ -16,7 +18,7 @@ function switchTab(view) {
     currentView = view;
     document.getElementById('tabNotes').className = `tab-btn ${view === 'notes' ? 'active' : ''}`;
     document.getElementById('tabTrash').className = `tab-btn ${view === 'trash' ? 'active' : ''}`;
-    document.getElementById('sidebarTitle').textContent = view === 'notes' ? 'History Notes' : 'Trash Bin';
+    document.getElementById('sidebarTitle').textContent = t(view === 'notes' ? 'sidebar.notes' : 'sidebar.trash');
     renderNoteList();
 }
 
@@ -27,7 +29,7 @@ function renderNoteList() {
     const dataSource = currentView === 'notes' ? notes : trash;
 
     if (dataSource.length === 0) {
-        listContainer.innerHTML = `<div style="padding: 15px; color: #999; font-size: 13px; text-align: center;">${currentView === 'notes' ? 'No history notes' : 'Trash is empty'}</div>`;
+        listContainer.innerHTML = `<div style="padding: 15px; color: #999; font-size: 13px; text-align: center;">${t(currentView === 'notes' ? 'empty.notes' : 'empty.trash')}</div>`;
         return;
     }
 
@@ -38,23 +40,23 @@ function renderNoteList() {
         if (currentView === 'notes') {
             item.innerHTML = `
                 <div class="note-info" onclick="loadNote('${note.id}')">
-                    <div class="note-title">${escapeHtml(note.title || 'Untitled')}</div>
+                    <div class="note-title">${escapeHtml(note.title || t('note.untitled'))}</div>
                     <div class="note-date">${note.date} ${note.time}</div>
                 </div>
                 <div class="note-actions">
-                    <button class="btn-icon" onclick="exportNoteDirect(event, '${note.id}')" title="Export as Txt">📥</button>
-                    <button class="btn-icon btn-delete" onclick="moveToTrash(event, '${note.id}')" title="Delete">✕</button>
+                    <button class="btn-icon" onclick="exportNoteDirect(event, '${note.id}')" title="${t('title.export')}">📥</button>
+                    <button class="btn-icon btn-delete" onclick="moveToTrash(event, '${note.id}')" title="${t('title.delete')}">✕</button>
                 </div>
             `;
         } else {
             item.innerHTML = `
                 <div class="note-info">
-                    <div class="note-title" style="color: #888;">${escapeHtml(note.title || 'Untitled')}</div>
+                    <div class="note-title" style="color: #888;">${escapeHtml(note.title || t('note.untitled'))}</div>
                     <div class="note-date">${note.date} ${note.time}</div>
                 </div>
                 <div class="note-actions">
-                    <button class="btn-icon" onclick="restoreNote(event, '${note.id}')" title="Restore">♻️</button>
-                    <button class="btn-icon btn-delete" onclick="deleteForever(event, '${note.id}')" title="Delete Forever">🗑️</button>
+                    <button class="btn-icon" onclick="restoreNote(event, '${note.id}')" title="${t('title.restore')}">♻️</button>
+                    <button class="btn-icon btn-delete" onclick="deleteForever(event, '${note.id}')" title="${t('title.deleteForever')}">🗑️</button>
                 </div>
             `;
         }
@@ -99,13 +101,13 @@ function saveNote() {
     hideError();
 
     if (!title) {
-        showError("Error: Title cannot be empty!");
+        showError(t('error.titleEmpty'));
         return;
     }
 
     const invalidChars = /[\\/:\*\?"<>|]/;
     if (invalidChars.test(title)) {
-        showError("Error: Title contains illegal characters (\\ / : * ? \" < > |)");
+        showError(t('error.titleInvalid'));
         return;
     }
 
@@ -166,7 +168,7 @@ function restoreNote(event, id) {
 
 function deleteForever(event, id) {
     event.stopPropagation();
-    if (confirm("Are you sure you want to permanently delete this note?")) {
+    if (confirm(t('confirm.deleteForever'))) {
         trash = trash.filter(n => n.id !== id);
         localStorage.setItem('my_trash', JSON.stringify(trash));
         renderNoteList();
@@ -180,7 +182,7 @@ function exportNoteDirect(event, id) {
 
     const timeFormatted = note.time.replace(/:/g, "-") + "-00";
     const fileName = `${note.date}_${timeFormatted}_${note.title}.txt`;
-    const fileContent = `Title: ${note.title}\nDate/Time: ${note.date} ${note.time}\n----------------------------------------\n\n${note.content}`;
+    const fileContent = `${t('export.labelTitle')}${note.title}\n${t('export.labelDateTime')}${note.date} ${note.time}\n----------------------------------------\n\n${note.content}`;
 
     const blob = new Blob([fileContent], { type: 'text/plain;charset=utf-8' });
     const url = URL.createObjectURL(blob);

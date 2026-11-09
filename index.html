@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Minimalist Local Notes</title>
+    <title data-i18n="app.title">Minimalist Local Notes</title>
     <style>
         * {
             box-sizing: border-box;
@@ -206,12 +206,12 @@
     <div class="sidebar">
         <div class="sidebar-header">
             <h3 id="sidebarTitle">History Notes</h3>
-            <button class="btn-new" onclick="createNewNote()">+ New</button>
+            <button class="btn-new" data-i18n="btn.new" onclick="createNewNote()">+ New</button>
         </div>
         
         <div class="tabs">
-            <button class="tab-btn active" id="tabNotes" onclick="switchTab('notes')">Notes</button>
-            <button class="tab-btn" id="tabTrash" onclick="switchTab('trash')">Trash</button>
+            <button class="tab-btn active" id="tabNotes" data-i18n="tab.notes" onclick="switchTab('notes')">Notes</button>
+            <button class="tab-btn" id="tabTrash" data-i18n="tab.trash" onclick="switchTab('trash')">Trash</button>
         </div>
 
         <div class="note-list" id="noteList"></div>
@@ -221,23 +221,24 @@
         <div class="editor-container">
             <div id="errorBox" class="error-msg"></div>
 
-            <input type="text" id="title" placeholder="Enter title...">
+            <input type="text" id="title" data-i18n-placeholder="placeholder.title" placeholder="Enter title...">
             
             <div class="row">
                 <input type="date" id="noteDate">
                 <input type="time" id="noteTime">
             </div>
 
-            <textarea id="content" placeholder="Write your thoughts here..."></textarea>
+            <textarea id="content" data-i18n-placeholder="placeholder.content" placeholder="Write your thoughts here..."></textarea>
             
             <div class="actions">
-                <span id="saveStatus" class="status-text">Saved to local history</span>
-                <button class="btn-save" onclick="saveNote()">Save to Local History</button>
+                <span id="saveStatus" class="status-text" data-i18n="status.saved">Saved to local history</span>
+                <button class="btn-save" data-i18n="btn.save" onclick="saveNote()">Save to Local History</button>
             </div>
         </div>
     </div>
 
     <!-- 引入外部 JS 檔案 -->
+    <script src="i18n.js"></script>
     <script src="renderer.js"></script>
 </body>
 </html>
